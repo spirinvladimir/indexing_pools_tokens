@@ -30,12 +30,12 @@ load = token => {
     return node
 }
 
-pairs = require('./pools_and_tokens.json').pairs
+pairs = require('./pools_and_tokens.json')
 
 P = []
 T = []
 
-bytesPerRow = 12
+bytesPerRow = 8
 totalBytes = pairs.length * bytesPerRow
 buffer = Buffer.alloc(totalBytes)
 offset = 0
@@ -55,15 +55,15 @@ for (let i = 0; i < pairs.length; i++) {
         T[it1] = pair.token1
         save(pair.token1, it1)
     }
-    buffer.writeInt32LE(pair.pair_index, offset)
-    buffer.writeInt32LE(it0, offset + 4)
-    buffer.writeInt32LE(it1, offset + 8)
+    buffer.writeInt32LE(it0, offset)
+    buffer.writeInt32LE(it1, offset + 4)
     offset += bytesPerRow
     progress(i, pairs.length)
 }
 progress(pairs.length, pairs.length)
 
+console.log('Saving indexed pools and tokens and relation...')
 fs.writeFileSync('p2tt.bin', buffer)
 fs.writeFileSync('pools.json', JSON.stringify(P), 'utf8')
 fs.writeFileSync('tokens.json', JSON.stringify(T), 'utf8')
-fs.writeFileSync('radix-tree-tokens.json', JSON.stringify(t), 'utf8')
+console.log('Done.')

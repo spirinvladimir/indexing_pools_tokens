@@ -11,7 +11,7 @@
     fflush(stdout); \
 } while(0)
 
-#define POOLS_COUNT 452063
+#define POOLS_COUNT 28
 
 int token0[POOLS_COUNT];
 int token1[POOLS_COUNT];
@@ -20,7 +20,7 @@ int main() {
 
 
     printf("Loading pools and it's tokens\n");
-    FILE* file = fopen("p2tt_452063.bin", "rb");
+    FILE* file = fopen("p2tt.bin", "rb");
     int it;
     int ip;
     int max_it = 0;
