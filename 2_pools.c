@@ -48,26 +48,35 @@ int main() {
     }
     PROGRESS(max_it, max_it);
 
-
     printf("\n\nFind token with only 2 pools\n");
     FILE *f = fopen("2_pools.bin", "wb");
     int** t2ps = malloc((max_it + 1) * sizeof(int*));
-    for (it = 0; it <= max_it; it++) {
-        t2ps[it] = malloc(t2ps_count[it] * sizeof(int));
+    for (int A = 0; A <= max_it; A++) {
+        t2ps[A] = malloc(t2ps_count[A] * sizeof(int));
         int i = 0;
         for(ip = 0; ip < POOLS_COUNT; ip++)
-            if (token0[ip] == it) {
-                t2ps[it][i++] = ip;
+            if (token0[ip] == A) {
+                t2ps[A][i++] = token1[ip];
                 if (i > 2) break;
-            } else if (token1[ip] == it) {
-                t2ps[it][i++] = ip;
+            } else if (token1[ip] == A) {
+                t2ps[A][i++] = token0[ip];
                 if (i > 2) break;
             }
         if (i == 2) {
-            fwrite(&t2ps[it][0], sizeof(int), 1, f);
-            fwrite(&t2ps[it][1], sizeof(int), 1, f);
+            int B = t2ps[A][0];
+            int C = t2ps[A][1];
+            for(ip = 0; ip < POOLS_COUNT; ip++)
+                if (
+                    (token0[ip] == B && token1[ip] == C) ||
+                    (token0[ip] == C && token1[ip] == B)
+                ) break;
+            if (ip == POOLS_COUNT) {
+                fwrite(&A, sizeof(int), 1, f);
+                fwrite(&B, sizeof(int), 1, f);
+                fwrite(&C, sizeof(int), 1, f);
+            }
         }
-        PROGRESS(it, max_it);
+        PROGRESS(A, max_it);
     }
     fclose(f);
     PROGRESS(max_it, max_it);
